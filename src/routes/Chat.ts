@@ -1,9 +1,8 @@
 import express, { type Router, type Request, type Response } from 'express';
-import handleError from '@/utils/handleError';
+// import handleError from '@/utils/handleError';
 import { body, validationResult } from 'express-validator';
-import { useChatGpt } from '@/hooks/useChatGpt';
-import e from 'express';
-import { ChatResult } from '@/types';
+import { useChatGpt } from '@/utils/useChatGpt';
+import { type Prompt, type ChatResult } from '@/types';
 
 const router: Router = express.Router();
 
@@ -15,13 +14,13 @@ export const ChatRoute = router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const { prompt } = req.body;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const { prompt }: Prompt = req.body;
 
-    if (prompt) {
-      const result: ChatResult = await useChatGpt(prompt as string);
-      console.log(result);
+    if (prompt.length > 0) {
+      const result: ChatResult = await useChatGpt(prompt);
       res.status(result?.status).json({
-        response_id: new Date(),
+        response_id: Math.floor(Date.now() / 1000),
         prompt,
         response: result.response,
       });
