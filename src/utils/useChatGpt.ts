@@ -7,7 +7,7 @@ dotEnv.config();
 const requestData = {
   model: 'text-davinci-003',
   temperature: parseInt(process.env.OPENAI_TEMP as string) ?? 0.7,
-  max_tokens: 50,
+  max_tokens: 1000, // should be about 750 words.
 };
 
 export const useChatGpt = async (prompt: string): Promise<ChatResult> => {

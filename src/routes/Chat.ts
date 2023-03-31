@@ -1,5 +1,4 @@
 import express, { type Router, type Request, type Response } from 'express';
-// import handleError from '@/utils/handleError';
 import { body, validationResult } from 'express-validator';
 import { useChatGpt } from '@/utils/useChatGpt';
 import { type Prompt, type ChatResult } from '@/types';
