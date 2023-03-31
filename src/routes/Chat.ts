@@ -14,8 +14,7 @@ export const ChatRoute = router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const { prompt }: Prompt = req.body;
+    const { prompt } = req.body as Prompt;
 
     if (prompt.length > 0) {
       const result: ChatResult = await useChatGpt(prompt);
