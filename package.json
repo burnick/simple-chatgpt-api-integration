@@ -7,7 +7,7 @@
     "dev": "nodemon  src/index.ts",
     "start": "npx ts-node dist",
     "build": "yarn lint; tsc ",
-    "lint": "eslint src/**/*.ts --fix",
+    "lint": "eslint src/* --fix",
     "prettier": "prettier --write src/**/*.ts",
     "test": "mocha --timeout 10000 --require ts-node/register --watch-extension ts 'src/**/*.test.ts'  --exit",
     "prepare": "husky install"
@@ -55,5 +55,9 @@
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
-  }
+  },
+  "eslintIgnore": [
+    "*.spec.ts",
+    "*.test.ts"
+  ]
 }

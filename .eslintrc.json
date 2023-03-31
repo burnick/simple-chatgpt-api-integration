@@ -30,6 +30,7 @@
   ],
   "plugins": ["react"],
   "rules": {
+    "no-magic-numbers": "warn",
     "@typescript-eslint/no-misused-promises": [
       "error",
       {

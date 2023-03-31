@@ -1,13 +1,18 @@
-import { type ChatGPTOutput, type ChatResult } from '@/types';
-import axios, { type AxiosError, type AxiosResponse } from 'axios';
+import { type ChatGPTOutput, type ChatResult, ChaptGPTDefaults } from '@/types';
+import axios, {
+  type AxiosError,
+  type AxiosResponse,
+  HttpStatusCode,
+} from 'axios';
 import * as dotEnv from 'dotenv';
 
+const Zero = 0;
 dotEnv.config();
-
 const requestData = {
-  model: 'text-davinci-003',
-  temperature: parseInt(process.env.OPENAI_TEMP as string) ?? 0.7,
-  max_tokens: 1000, // should be about 750 words.
+  model: ChaptGPTDefaults.MODEL,
+  temperature:
+    parseInt(process.env.OPENAI_TEMP as string) ?? ChaptGPTDefaults.TEMPERATURE,
+  max_tokens: ChaptGPTDefaults.MAX_TOKENS, // should be about 750 words.
 };
 
 export const useChatGpt = async (prompt: string): Promise<ChatResult> => {
@@ -20,7 +25,7 @@ export const useChatGpt = async (prompt: string): Promise<ChatResult> => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${process.env.OPENAI_API_KEY as string}`,
         },
-        timeout: 5 * 1000, // n seconds
+        // timeout: 5 * 1000, // n seconds
       }
     )
     .then((response: AxiosResponse<ChatGPTOutput>) => {
@@ -29,13 +34,14 @@ export const useChatGpt = async (prompt: string): Promise<ChatResult> => {
         status,
       } = response;
       return {
-        status: status ?? 200,
-        response: choices?.length > 0 ? choices[0]?.text : 'no response',
+        status: status ?? HttpStatusCode.Ok,
+        response:
+          choices[Zero] !== undefined ? choices[Zero]?.text : 'no response',
       };
     })
     .catch((error: AxiosError) => {
       return {
-        status: error.status ?? 400,
+        status: error.status ?? HttpStatusCode.BadRequest,
         response: error.message,
       };
     });

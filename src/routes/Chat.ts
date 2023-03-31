@@ -2,7 +2,10 @@ import express, { type Router, type Request, type Response } from 'express';
 import { body, validationResult } from 'express-validator';
 import { useChatGpt } from '@/utils/useChatGpt';
 import { type Prompt, type ChatResult } from '@/types';
+import { HttpStatusCode } from 'axios';
 
+const milliSecondToSecond = 1000;
+const emptyLength = 0;
 const router: Router = express.Router();
 
 export const ChatRoute = router.post(
@@ -11,14 +14,16 @@ export const ChatRoute = router.post(
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res
+        .status(HttpStatusCode.BadRequest)
+        .json({ errors: errors.array() });
     }
     const { prompt } = req.body as Prompt;
 
-    if (prompt.length > 0) {
+    if (prompt.length > emptyLength) {
       const result: ChatResult = await useChatGpt(prompt);
       res.status(result?.status).json({
-        response_id: Math.floor(Date.now() / 1000),
+        response_id: Math.floor(Date.now() / milliSecondToSecond),
         prompt,
         response: result.response,
       });
