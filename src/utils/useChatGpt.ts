@@ -20,6 +20,7 @@ export const useChatGpt = async (prompt: string): Promise<ChatResult> => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${process.env.OPENAI_API_KEY as string}`,
         },
+        timeout: 5 * 1000, // n seconds
       }
     )
     .then((response: AxiosResponse<ChatGPTOutput>) => {
